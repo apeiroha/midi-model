@@ -527,6 +527,9 @@ if __name__ == "__main__":
     parser.add_argument("--model-token-url", type=str,
                         default="https://huggingface.co/skytnt/midi-model-tv2o-medium/resolve/main/onnx/model_token.onnx",
                         help="download model-token to model-token-path if file not exist")
+    parser.add_argument("--device", type=str,
+                        default="dml",
+                        help="dml, cuda, cpu")
     opt = parser.parse_args()
     check_update(VERSION)
     OUTPUT_BATCH_SIZE = opt.batch
@@ -592,8 +595,15 @@ if __name__ == "__main__":
     synthesizer = MidiSynthesizer(soundfont_path)
     thread_pool = ThreadPoolExecutor(max_workers=OUTPUT_BATCH_SIZE)
     tokenizer = get_tokenizer(opt.model_config)
-    providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
-    device = "cuda"
+    if opt.device == "dml":
+        providers = ['DmlExecutionProvider', 'CPUExecutionProvider']
+        device = "dml"
+    elif opt.device == "cuda":
+        providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
+        device = "cuda"
+    else:
+        providers = ['CPUExecutionProvider']
+        device = "cpu"
     try:
         model_base = rt.InferenceSession(opt.model_base_path, providers=providers)
         model_token = rt.InferenceSession(opt.model_token_path, providers=providers)

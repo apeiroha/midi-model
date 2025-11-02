@@ -316,7 +316,10 @@ def load_model(path, model_config, lora_path):
     model.load_state_dict(state_dict, strict=False)
     if lora_path:
         model = model.load_merge_lora(lora_path)
-    model.to(opt.device, dtype=torch.bfloat16 if opt.device == "cuda" else torch.float32).eval()
+    if opt.device == "dml":
+        model.to(opt.device, dtype=torch.float32).eval()
+    else:
+        model.to(opt.device, dtype=torch.bfloat16 if opt.device == "cuda" else torch.float32).eval()
     return "success"
 
 
@@ -365,7 +368,7 @@ key_signatures = ['C♭', 'A♭m', 'G♭', 'E♭m', 'D♭', 'B♭m', 'A♭', 'Fm
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=7860, help="gradio server port")
-    parser.add_argument("--device", type=str, default="cuda", help="device to run model")
+    parser.add_argument("--device", type=str, default="dml", help="device to run model (dml, cuda, cpu)")
     parser.add_argument("--batch", type=int, default=4, help="batch size")
     parser.add_argument("--share", action="store_true", default=False, help="share gradio")
     opt = parser.parse_args()

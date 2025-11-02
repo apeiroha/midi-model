@@ -30,9 +30,15 @@
 - install [fluidsynth](https://www.fluidsynth.org/)>=2.0.0
 - `pip install -r requirements.txt`
 
+### DirectML
+- `pip install -r requirements-directml.txt`
+
 ## Run app
 
 `python app.py`
+
+### DirectML
+`python app_onnx.py --device dml`
 
 ## Train 
 

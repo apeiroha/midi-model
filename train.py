@@ -359,7 +359,7 @@ if __name__ == '__main__':
         "--accelerator",
         type=str,
         default="gpu",
-        choices=["cpu", "gpu", "tpu", "ipu", "hpu", "auto"],
+        choices=["cpu", "gpu", "tpu", "ipu", "hpu", "auto", "dml"],
         help="accelerator",
     )
     parser.add_argument(
