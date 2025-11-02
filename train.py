@@ -424,8 +424,9 @@ if __name__ == '__main__':
         collate_fn=val_dataset.collate_fn
     )
     print(f"train: {len(train_dataset)}  val: {len(val_dataset)}")
-    torch.backends.cuda.enable_mem_efficient_sdp(True)
-    torch.backends.cuda.enable_flash_sdp(True)
+    if opt.accelerator == "gpu":
+        torch.backends.cuda.enable_mem_efficient_sdp(True)
+        torch.backends.cuda.enable_flash_sdp(True)
     model = TrainMIDIModel(config, lr=opt.lr, weight_decay=opt.weight_decay,
                            warmup=opt.warmup_step, max_step=opt.max_step,
                            sample_seq=opt.sample_seq, gen_example_interval=opt.gen_example_interval,
